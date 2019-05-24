@@ -6,7 +6,7 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/16 17:49:29 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/23 15:55:17 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/24 15:18:21 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,17 +15,16 @@
 int		count_lines(t_input *data)
 {
 	char	*line;
-	int		count_line;
 
-	count_line = 0;
+	data->countline = 0;
 	while (get_next_line(data->fd, &line))
 	{
-		count_line++;
+		data->countline++;
 		ft_strdel(&line);
 	}
-	if (!(data->tab_line = malloc(sizeof(int) * count_line)))
+	if (!(data->tab_line = malloc(sizeof(int) * data->countline)))
 		return (-1);
-	data->tab_line[count_line] = 0;
+	//data->tab_line[data->countline] = 0;
 	return (0);
 }
 
@@ -92,7 +91,7 @@ int		parse_file(t_input *data)
 	fill_tab_line(data);
 	data->xmax = 0;
 	data->ymax = 0;
-	while (data->tab_line[i])
+	while (i < data->countline)
 	{
 		if (data->xmax < data->tab_line[i])
 			data->xmax = data->tab_line[i];

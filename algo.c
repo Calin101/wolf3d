@@ -6,7 +6,7 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/15 15:29:15 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/23 19:25:28 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/24 18:18:00 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -71,13 +71,16 @@ int raytocol(t_input *inputs, t_dot rot, t_dot dot)
 	
 	while ((text = colli(dot.x, dot.y, dot.z, inputs)) < 0 && ++i < inputs->render)
 	{
-		
-		
+		if (dot.z > inputs->zmax || dot.z < -1/*&& ((rot.y > M_PI_2) && (rot.y < (double)(3 * M_PI_2)))*/)
+		{
+			//printf("out\n");
+			return(0x000000);
+		}
 		/*dot.x += 0.1;
 		dot.y = ((double)((double)(cos(rot.x) * ((double)(((double)(dot.x - inputs->player_pos.x)) / sin(rot.x))) + inputs->player_pos.y)));
 		dot.z = ((double)((double)(sin(rot.y) * ((double)(((double)(dot.x - inputs->player_pos.x)) / sin(rot.x))) + inputs->player_pos.z)));*/
-		//k += (double)(inputs->k * ((double)(i / inputs->render)));
-		k += 0.05;
+		//k += 0.001 + (double)(k / 20);
+		k += 0.075;
 		dot.x = cos(rot.x) * k + inputs->player_pos.x;
 		dot.y = sin(rot.x) * k + inputs->player_pos.y;
 		dot.z = cos(rot.y) * k + inputs->player_pos.z;
@@ -94,27 +97,60 @@ int raytocol(t_input *inputs, t_dot rot, t_dot dot)
 			return (0xFFFFFF);
 		if (text == 2)
 			return (0x0000FF);
+		if (text == 1)
+			return (0xFF0000);
 	}
 	return (0x000000);
 }
 
-void raytracing(t_input *inputs)
+
+void ray(t_thread *thread)
 {
 	int i;
+	//t_thread	*thread;
+	//t_input		*inputs;
 
-	i = -1;
-	while (++i < (inputs->win_h * inputs->win_w))
+	//thread = (t_thread *)t;
+	i = thread->start - 1;
+	//printf("start = %ld end = %ld\n", thread->start, thread->end);
+	while (++i < thread->end)
 	{
 	//	printf("%d\n", i);
 	//	printf("%d	%d\n", i % inputs->win_h, i / inputs->win_w);
-		inputs->im.tab[i] = raytocol(inputs, (t_dot){.x = (double)(inputs->rotplayer.x + (double)(inputs->rotscreen.zmin * (double)(((double)(i % inputs->win_h)) / inputs->win_h)) - ((double)(inputs->rotscreen.zmin / 2))),
-		.y = (double)(inputs->rotplayer.y + (double)(inputs->rotscreen.zmax * ((double)((double)(i / inputs->win_w) / inputs->win_w)) - ((double)(inputs->rotscreen.zmax / 2)))), .z = 0}, inputs->player_pos);
+		thread->inputs->im.tab[i] = raytocol(thread->inputs, (t_dot){.x = (double)(thread->inputs->rotplayer.x + (double)(thread->inputs->rotscreen.zmin * (double)(((double)(i % thread->inputs->win_h)) / thread->inputs->win_h)) - ((double)(thread->inputs->rotscreen.zmin / 2))),
+		.y = (double)(thread->inputs->rotplayer.y + (double)(thread->inputs->rotscreen.zmax * ((double)((double)(i / thread->inputs->win_w) / thread->inputs->win_w)) - ((double)(thread->inputs->rotscreen.zmax / 2)))), .z = 0}, thread->inputs->player_pos);
 	}
+}
+
+void *raytracing(void *t)
+{
+	ray((t_thread *)t);
+	return(0);
+}
+
+void	create_thread(t_input *input)
+{
+	int i;
+
+	i = 0;
+	while (i < NB_THREAD)
+	{
+	//	printf("i = %d\n", i);
+		input->thread_tab[i].start = (i * (input->win_h * input->win_w)) / NB_THREAD;
+		input->thread_tab[i].end = ((i + 1) * (input->win_h * input->win_w)) / NB_THREAD;
+		input->thread_tab[i].inputs = input;
+		pthread_create(&input->thread_tab[i].thread, NULL, &raytracing, &input->thread_tab[i]);
+		i++;
+	}
+	i = 0;
+	while (i <= NB_THREAD)
+		pthread_join(input->thread_tab[i++].thread, NULL);
 }
 
 void wolf(t_input *inputs)
 {
-	raytracing(inputs);
+	create_thread(inputs);
+	//raytracing(inputs);
 	mlx_put_image_to_window(inputs->mlx_ad, inputs->win_ad, inputs->im.ad, 0, 0);
 }
 
@@ -123,7 +159,7 @@ int var_init(t_input *inputs)
 	
 	inputs->win_h = 750;
 	inputs->win_w = 500;
-	inputs->render = 300;
+	inputs->render = 200;
 	inputs->rotscreen.zmax = M_PI_4;	/*		ecart omega y		*/
 	inputs->rotscreen.zmin = M_PI_4;	/*		ecart omega x		*/
 	inputs->rotplayer.x = 0;
@@ -131,16 +167,19 @@ int var_init(t_input *inputs)
 	inputs->rotplayer.y = M_PI_2;
 	inputs->rotplayer.z = 3 * M_PI_2;
 	inputs->tab_tex[0] = (t_wall){.zmax = 0, .zmin = -0.5};
-	inputs->tab_tex[1] = (t_wall){.zmax = 3, .zmin = 2};
+	inputs->tab_tex[1] = (t_wall){.zmax = 0, .zmin = 0};
 	inputs->tab_tex[2] = (t_wall){.zmax = 1, .zmin = -0.5};
-	inputs->zmax = 3;
-	inputs->k = 0.5;
-	printf("ici?\n");
+	inputs->zmax = 1.2;
+	inputs->k = 0;
+	printf("ici2?\n");
 	inputs->mlx_ad = mlx_init();
+	printf("ici3?\n");
 	inputs->win_ad = mlx_new_window(inputs->mlx_ad, inputs->win_h, inputs->win_w, "Wolf3d");
+	printf("ici4?\n");
 	inputs->im.ad = mlx_new_image(inputs->mlx_ad, inputs->win_h, inputs->win_w);
+	printf("ici5?\n");
 	inputs->im.tab = (int *)mlx_get_data_addr(inputs->im.ad, &(inputs->im.bits_per_pixel), &(inputs->im.size_line), &(inputs->im.endian));
-	printf("ici?\n");
+	printf("ici6?\n");
 	
 	
 	return (1);
@@ -151,17 +190,27 @@ int keyboard(int key, t_input *inputs)
 	if (key == KEY_P)
 		printf("AFTER =	%lf		%lf		%lf\n", inputs->rotplayer.x, inputs->rotplayer.y, inputs->rotplayer.z);
 	if (key == KEY_LEFT)
-		inputs->rotplayer.x -= M_PI / 30;
+		inputs->rotplayer.x -= M_PI / 100;
 	if (key == KEY_RIGHT)
-		inputs->rotplayer.x += M_PI / 30;
+		inputs->rotplayer.x += M_PI / 100;
 	if (key == KEY_UP)
-		inputs->rotplayer.y -= M_PI / 30;
+		inputs->rotplayer.y -= M_PI / 100;
 	if (key == KEY_DOWN)
-		inputs->rotplayer.y += M_PI / 30;
+		inputs->rotplayer.y += M_PI / 100;
 	if (key == KEY_PAD_5)
-		inputs->player_pos.x += 0.05;
+	{
+		inputs->k += 0.01;
+		inputs->player_pos.x = cos(inputs->rotplayer.x) * inputs->k + inputs->player_pos.x;
+		inputs->player_pos.y = sin(inputs->rotplayer.x) * inputs->k + inputs->player_pos.y;
+		inputs->player_pos.z = cos(inputs->rotplayer.y) * inputs->k + inputs->player_pos.z;
+	}
 	if (key == KEY_PAD_2)
-		inputs->player_pos.x -= 0.05;
+	{
+		inputs->k -= 0.01;
+		inputs->player_pos.x = cos(inputs->rotplayer.x) * inputs->k + inputs->player_pos.x;
+		inputs->player_pos.y = sin(inputs->rotplayer.x) * inputs->k + inputs->player_pos.y;
+		inputs->player_pos.z = cos(inputs->rotplayer.y) * inputs->k + inputs->player_pos.z;
+	}
 	if (key == KEY_PAD_1)
 		inputs->player_pos.y += 0.05;
 	if (key == KEY_PAD_3)
@@ -193,6 +242,8 @@ int keyboard(int key, t_input *inputs)
 	wolf(inputs);
 	return(1);
 }
+
+
 int main(int arc, char **arv)
 {
 	t_input inputs;
@@ -214,6 +265,7 @@ int main(int arc, char **arv)
 	var_init(&inputs);
 	printf("wolf\n");
 	wolf(&inputs);
+	//return(1);
 	/*int i;
 
 	i = -1;

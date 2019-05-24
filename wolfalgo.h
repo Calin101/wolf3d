@@ -6,7 +6,7 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/15 15:38:23 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/23 17:51:54 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/24 17:03:36 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,8 +21,8 @@
 # include <math.h>
 # include <fcntl.h>
 # include <stdio.h>
-# define NBRTHREAD		8
-
+# include <pthread.h>
+# define NB_THREAD		16
 typedef struct  s_dot
 {
    double		x;
@@ -46,6 +46,14 @@ typedef struct		s_image
 	
 }					t_image;
 
+typedef	struct			s_thread
+{
+	pthread_t			thread;
+	long					start;
+	long					end;
+	struct s_input		*inputs;
+}						t_thread;
+
 typedef struct		s_input
 {
 	void	*mlx_ad;
@@ -54,18 +62,21 @@ typedef struct		s_input
 	int		win_h;
 	int		win_w;
 	int		totalnb;
+	int		countline;
 	int		fd;
     int		fd2;
     int		fd3;
 	int		*tab;
 	int		*tab_line;
-	int		xmax;
-	int		ymax;
-	int		zmax;
+	double		xmax;
+	double		ymax;
+	double		zmax;
 
 	t_wall	tab_tex[4];
 	t_dot	rotplayer;
 	t_wall	rotscreen;
+
+	t_thread	thread_tab[NB_THREAD];
 
 	long render;
 	double k;
