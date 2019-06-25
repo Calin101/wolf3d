@@ -5,8 +5,8 @@
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/05/15 15:29:15 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/24 18:18:00 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Created: 2019/06/25 15:55:17 by mwaterso     #+#   ##    ##    #+#       */
+/*   Updated: 2019/06/25 18:21:53 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,32 +33,30 @@ long findex(double y, int *lenline, int sumax)
 	return(-1);
 }
 
+void printcol(int i, int dist, t_input *inputs, int color)
+{
+	int div;
+
+	div = inputs->scale - dist;
+	printf("%d\n", div);
+	print_line(inputs, (t_dot){.x = (i % inputs->win_w), .y = inputs->win_h * (double)(1 / div)}, (t_dot){.x = (i % inputs->win_w), .y = (double)(inputs->win_h * (double)((div - 1) / div))}, 0xFFFF00);
+	//printf("----%d		%d				%d		%d-----\n", (i % inputs->win_w), inputs->win_h * (double)(1 / div), (i % inputs->win_w), inputs->win_h * (double)((div - 1) / div));
+}
+
 int colli(double x, double y, double z, t_input *inputs)
 {
 	long yesy;
 
-	if (x > inputs->xmax || x <= (double)(0) || y > inputs->ymax || y <= (double)(0) || z > inputs->zmax)
+	if (x >= inputs->xmax || x < (double)(0) || y >= inputs->ymax || y < (double)(0)  /* z >= inputs->zmax*/)
 		return (-1);
-
 	if ((yesy = findex((y), inputs->tab_line, inputs->totalnb)) < 0)
 		return (-1);
-	//printf("end of findex\n");
-//	if (y > 3)
-//		printf("wesh\n");
-	if ((z < inputs->tab_tex[inputs->tab[(long)(x) + yesy]].zmax) &&
-	(z > inputs->tab_tex[inputs->tab[(long)(x) + yesy]].zmin))
-	{
-	//	if (y > 3)
-	//		printf("wesh\n");
-	//	printf("%lf		%lf		%lf\n", x, y, z);
-	//	printf("%lf\n", inputs->tab_tex[0].zmax/*inputs->tab_tex[inputs->tab[(long)(x) % yesy + yesy]].zmax*/);
-		//printf("%d\n", inputs->tab[(long)(x) % yesy + yesy]);
+	if (inputs->tab[(long)(x) + yesy] == 2)
 		return (inputs->tab[(long)(x) + yesy]);
-	}
 	return (-1);
 }
 
-int raytocol(t_input *inputs, t_dot rot, t_dot dot)
+int raytocol(long index, t_input *inputs, t_fdot rot, t_fdot dot)
 {
 	int i;
 	double k;
@@ -71,34 +69,19 @@ int raytocol(t_input *inputs, t_dot rot, t_dot dot)
 	
 	while ((text = colli(dot.x, dot.y, dot.z, inputs)) < 0 && ++i < inputs->render)
 	{
-		if (dot.z > inputs->zmax || dot.z < -1/*&& ((rot.y > M_PI_2) && (rot.y < (double)(3 * M_PI_2)))*/)
-		{
-			//printf("out\n");
-			return(0x000000);
-		}
-		/*dot.x += 0.1;
-		dot.y = ((double)((double)(cos(rot.x) * ((double)(((double)(dot.x - inputs->player_pos.x)) / sin(rot.x))) + inputs->player_pos.y)));
-		dot.z = ((double)((double)(sin(rot.y) * ((double)(((double)(dot.x - inputs->player_pos.x)) / sin(rot.x))) + inputs->player_pos.z)));*/
-		//k += 0.001 + (double)(k / 20);
-		k += 0.075;
+		k += 0.0075;
 		dot.x = cos(rot.x) * k + inputs->player_pos.x;
 		dot.y = sin(rot.x) * k + inputs->player_pos.y;
-		dot.z = cos(rot.y) * k + inputs->player_pos.z;
-		//printf("AFTER =	%lf		%lf		%lf\n", dot.x, dot.y, dot.z);
-		//printf("out of while\n");
-	//	if (rot.x > 0.099480 && rot.y > 1.8)
-	//	{
-	//		printf("BEFORE = %lf	%lf		%lf\n", dot.x, dot.y, dot.z);
-	//	}
+		dot.z = 0;
 	}
 	if (i < inputs->render)
 	{
 		if (text == 0)
-			return (0xFFFFFF);
+			printcol(index, (k + 1), inputs, 0xFFFFFF);
 		if (text == 2)
-			return (0x0000FF);
+			printcol(index, (k + 1), inputs, 0x0000FF);
 		if (text == 1)
-			return (0xFF0000);
+			printcol(index, (k + 1), inputs, 0xFF0000);
 	}
 	return (0x000000);
 }
@@ -115,10 +98,18 @@ void ray(t_thread *thread)
 	//printf("start = %ld end = %ld\n", thread->start, thread->end);
 	while (++i < thread->end)
 	{
-	//	printf("%d\n", i);
-	//	printf("%d	%d\n", i % inputs->win_h, i / inputs->win_w);
-		thread->inputs->im.tab[i] = raytocol(thread->inputs, (t_dot){.x = (double)(thread->inputs->rotplayer.x + (double)(thread->inputs->rotscreen.zmin * (double)(((double)(i % thread->inputs->win_h)) / thread->inputs->win_h)) - ((double)(thread->inputs->rotscreen.zmin / 2))),
-		.y = (double)(thread->inputs->rotplayer.y + (double)(thread->inputs->rotscreen.zmax * ((double)((double)(i / thread->inputs->win_w) / thread->inputs->win_w)) - ((double)(thread->inputs->rotscreen.zmax / 2)))), .z = 0}, thread->inputs->player_pos);
+		//printf("%d\n", i);
+		 if (i / thread->inputs->win_w > 385 && i % thread->inputs->win_h > 240 && i % thread->inputs->win_h < 250 && i / thread->inputs->win_w < 389)
+			thread->inputs->debug = 1;
+		else
+			thread->inputs->debug = 0;
+		//printf("%d	%d\n", i % inputs->win_h, i / inputs->win_w);
+		//thread->inputs->im.tab[i] = raytocol(thread->inputs, (t_dot){.x = (double)(thread->inputs->rotplayer.x + (double)(thread->inputs->rotscreen.zmin * (double)(((double)(i % thread->inputs->win_h)) / thread->inputs->win_h)) - ((double)(thread->inputs->rotscreen.zmin / 2))),
+		//.y = (double)(thread->inputs->rotplayer.y + (double)(thread->inputs->rotscreen.zmax * ((double)((double)(i / thread->inputs->win_w) / thread->inputs->win_w)) - ((double)(thread->inputs->rotscreen.zmax / 2)))), .z = 0}, thread->inputs->player_pos);
+		//printf("%lf\n", (double)(thread->inputs->rotplayer.x + (double)(thread->inputs->rotscreen.zmin * (double)(((double)(i % thread->inputs->win_w)) / thread->inputs->win_w)) - ((double)(thread->inputs->rotscreen.zmin / 2))));
+		raytocol(i, thread->inputs, (t_fdot){.x = (double)(thread->inputs->rotplayer.x + (double)(thread->inputs->rotscreen.zmin * (double)(((double)(i % thread->inputs->win_w)) / thread->inputs->win_w)) - ((double)(thread->inputs->rotscreen.zmin / 2))),
+		.y = 0, .z = 0}, thread->inputs->player_pos);
+		printf("%lf\n", (double)(thread->inputs->rotplayer.x + (double)(thread->inputs->rotscreen.zmin * (double)(((double)(i % thread->inputs->win_w)) / thread->inputs->win_w)) - ((double)(thread->inputs->rotscreen.zmin / 2))));
 	}
 }
 
@@ -135,9 +126,11 @@ void	create_thread(t_input *input)
 	i = 0;
 	while (i < NB_THREAD)
 	{
-	//	printf("i = %d\n", i);
-		input->thread_tab[i].start = (i * (input->win_h * input->win_w)) / NB_THREAD;
-		input->thread_tab[i].end = ((i + 1) * (input->win_h * input->win_w)) / NB_THREAD;
+		printf("i = %d\n", i);
+		input->thread_tab[i].start = (i *  input->win_w) / NB_THREAD;
+		printf("i = %d\n", (i *  input->win_w) / NB_THREAD);
+		input->thread_tab[i].end = ((i + 1) * (input->win_w)) / NB_THREAD;
+		printf("i = %d\n", ((i + 1) * (input->win_w)) / NB_THREAD);
 		input->thread_tab[i].inputs = input;
 		pthread_create(&input->thread_tab[i].thread, NULL, &raytracing, &input->thread_tab[i]);
 		i++;
@@ -149,6 +142,8 @@ void	create_thread(t_input *input)
 
 void wolf(t_input *inputs)
 {
+	//mlx_clear_window(inputs->mlx_ad, inputs->win_ad);
+	clear_im(inputs);
 	create_thread(inputs);
 	//raytracing(inputs);
 	mlx_put_image_to_window(inputs->mlx_ad, inputs->win_ad, inputs->im.ad, 0, 0);
@@ -157,26 +152,24 @@ void wolf(t_input *inputs)
 int var_init(t_input *inputs)
 {
 	
-	inputs->win_h = 750;
-	inputs->win_w = 500;
-	inputs->render = 200;
+	inputs->win_w = 750;
+	inputs->win_h = 500;
+	inputs->render = 1000;
+	inputs->scale = 50;
 	inputs->rotscreen.zmax = M_PI_4;	/*		ecart omega y		*/
 	inputs->rotscreen.zmin = M_PI_4;	/*		ecart omega x		*/
 	inputs->rotplayer.x = 0;
 	printf("ici?\n");
 	inputs->rotplayer.y = M_PI_2;
 	inputs->rotplayer.z = 3 * M_PI_2;
-	inputs->tab_tex[0] = (t_wall){.zmax = 0, .zmin = -0.5};
-	inputs->tab_tex[1] = (t_wall){.zmax = 0, .zmin = 0};
-	inputs->tab_tex[2] = (t_wall){.zmax = 1, .zmin = -0.5};
 	inputs->zmax = 1.2;
 	inputs->k = 0;
 	printf("ici2?\n");
 	inputs->mlx_ad = mlx_init();
 	printf("ici3?\n");
-	inputs->win_ad = mlx_new_window(inputs->mlx_ad, inputs->win_h, inputs->win_w, "Wolf3d");
+	inputs->win_ad = mlx_new_window(inputs->mlx_ad, inputs->win_w, inputs->win_h, "Wolf3d");
 	printf("ici4?\n");
-	inputs->im.ad = mlx_new_image(inputs->mlx_ad, inputs->win_h, inputs->win_w);
+	inputs->im.ad = mlx_new_image(inputs->mlx_ad, inputs->win_w, inputs->win_h);
 	printf("ici5?\n");
 	inputs->im.tab = (int *)mlx_get_data_addr(inputs->im.ad, &(inputs->im.bits_per_pixel), &(inputs->im.size_line), &(inputs->im.endian));
 	printf("ici6?\n");
@@ -199,17 +192,19 @@ int keyboard(int key, t_input *inputs)
 		inputs->rotplayer.y += M_PI / 100;
 	if (key == KEY_PAD_5)
 	{
-		inputs->k += 0.01;
-		inputs->player_pos.x = cos(inputs->rotplayer.x) * inputs->k + inputs->player_pos.x;
-		inputs->player_pos.y = sin(inputs->rotplayer.x) * inputs->k + inputs->player_pos.y;
-		inputs->player_pos.z = cos(inputs->rotplayer.y) * inputs->k + inputs->player_pos.z;
-	}
+		inputs->player_pos.x += 0.05;
+	// 	inputs->k += 0.01;
+	// 	inputs->player_pos.x = cos(inputs->rotplayer.x) * inputs->k + inputs->player_pos.x;
+	// 	inputs->player_pos.y = sin(inputs->rotplayer.x) * inputs->k + inputs->player_pos.y;
+	// 	inputs->player_pos.z = cos(inputs->rotplayer.y) * inputs->k + inputs->player_pos.z;
+	 }
 	if (key == KEY_PAD_2)
 	{
-		inputs->k -= 0.01;
-		inputs->player_pos.x = cos(inputs->rotplayer.x) * inputs->k + inputs->player_pos.x;
-		inputs->player_pos.y = sin(inputs->rotplayer.x) * inputs->k + inputs->player_pos.y;
-		inputs->player_pos.z = cos(inputs->rotplayer.y) * inputs->k + inputs->player_pos.z;
+		inputs->player_pos.x -= 0.05;
+	// 	inputs->k -= 0.01;
+	// 	inputs->player_pos.x = cos(inputs->rotplayer.x) * inputs->k + inputs->player_pos.x;
+	// 	inputs->player_pos.y = sin(inputs->rotplayer.x) * inputs->k + inputs->player_pos.y;
+	// 	inputs->player_pos.z = cos(inputs->rotplayer.y) * inputs->k + inputs->player_pos.z;
 	}
 	if (key == KEY_PAD_1)
 		inputs->player_pos.y += 0.05;
