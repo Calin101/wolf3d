@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   wolfalgo.h                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/15 15:38:23 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/07/27 13:53:55 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/09 18:32:44 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -65,8 +65,8 @@ typedef struct			s_affine
 {
 	double				a;
 	double				b;
-	int					is_equation;
-}						t_affine;
+	int				is_equation;
+}				t_affine;
 
 typedef struct          s_input
 {
@@ -78,8 +78,8 @@ typedef struct          s_input
         int             totalnb;
         int             countline;
         int             fd;
-    int         fd2;
-    int         fd3;
+        int         fd2;
+        int         fd3;
         int             *tab;
         int             *tab_line;
         int             scale;
@@ -97,17 +97,15 @@ typedef struct          s_input
 
         long render;
         double k;
-
-        t_fdot  player_pos;
-
-        t_fdot   posplayer;
-        double  dirplayer;
-        double  fov;
-        double  alpha;
-        double  step_ray;
-		t_affine	ray;
-		int 	hit;
-		int		index;
+        t_fdot          posplayer;
+        double          dirplayer;
+        double          fov;
+        double          alpha;
+        double          step_ray;
+		double			_3pi_2;
+	t_affine	ray;
+	int 	        hit;
+	int		index;
         /******************/
 
         t_image im;
@@ -123,5 +121,6 @@ int             parse_file(t_input *data);
 void    print_line(t_input *input, t_dot a, t_dot b, int color);
 void clear_im(t_input *data);
 int ft_keyboard(int key, t_input *inputs);
+double    ft_modulo(double nbr, double mod);
 
 #endif

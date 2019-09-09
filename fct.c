@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   fct.c                                            .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/07/09 16:10:44 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/07/15 14:22:24 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/09 17:22:08 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -63,4 +63,10 @@ void print_line(t_input *input, t_dot a, t_dot b, int color)
                 //printf("2\n");
         i++;
     }
+}
+
+double    ft_modulo(double nbr, double mod)
+{
+   return (nbr - (int)(nbr / mod) * mod -\
+            (mod < 0 ? mod : 0));
 }

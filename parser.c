@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   parser.c                                         .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/16 17:49:29 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/08/30 16:55:38 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/09 16:00:50 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -68,9 +68,8 @@ void	filltab(t_input *data)
 		{
 			if (ft_atoi(tmp_tab[index.i]) == 1)
 			{
-				data->player_pos.x = index.i;
-				data->player_pos.y = count_y;
-				data->player_pos.z = 0.75;
+				data->posplayer.x = index.i;
+				data->posplayer.y = count_y;
 			}
 			data->tab[index.j++] = ft_atoi(tmp_tab[index.i++]);
 		}
