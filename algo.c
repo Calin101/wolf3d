@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   algo.c                                           .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/07/09 16:09:57 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/04 16:36:10 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/10 18:51:50 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -120,10 +120,10 @@ void ray(t_thread *thread)
         while (++i < thread->end)
         {
                 //printf("%d\n", i);
-                 if (i / thread->inputs->win_w > 385 && i % thread->inputs->win_h > 240 && i % thread->inputs->win_h < 250 && i / thread->inputs->win_w < 389)
-                        thread->inputs->debug = 1;
-                else
-                        thread->inputs->debug = 0;
+               //  if (i / thread->inputs->win_w > 385 && i % thread->inputs->win_h > 240 && i % thread->inputs->win_h < 250 && i / thread->inputs->win_w < 389)
+              //          thread->inputs->debug = 1;
+              //  else
+               //         thread->inputs->debug = 0;
                 //printf("---------------%d    %d----------------\n", i % thread->inputs->win_h, i / thread->inputs->win_w);
                 //thread->inputs->im.tab[i] = raytocol(thread->inputs, (t_dot){.x = (double)(thread->inputs->rotplayer.x + (double)(thread->inputs->rotscreen.zmin * (double)(((double)(i % thread->inputs->win_h)) / thread->inputs->win_h)) - ((double)(thread->inputs->rotscreen.zmin / 2))),
                 //.y = (double)(thread->inputs->rotplayer.y + (double)(thread->inputs->rotscreen.zmax * ((double)((double)(i / thread->inputs->win_w) / thread->inputs->win_w)) - ((double)(thread->inputs->rotscreen.zmax / 2)))), .z = 0}, thread->inputs->player_pos);
