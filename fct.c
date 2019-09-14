@@ -6,7 +6,7 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/07/09 16:10:44 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/13 18:55:27 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/14 17:57:27 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,6 +48,7 @@ void print_line(t_input *input, t_dot a, t_dot b, int color)
     int i;
 
     i = 0;
+    printf("1\n");
     //printf("-----%d   %d---------%d   %d-----\n", a.x, a.y, b.x, b.y);
     if (b.x == a.x && b.y  == a.y)
         return;
@@ -55,14 +56,14 @@ void print_line(t_input *input, t_dot a, t_dot b, int color)
     dx = (double)(a.x - b.x) / tall;
     dy = (double)(a.y - b.y) / tall;
 
-    while (!((int)(b.x + i * dx) == a.x && (int)(b.y + i * dy) == a.y))
-    {
-                //printf("1\n");
-        if ((b.x + i * dx) >= 0 && (b.x + i * dx) < input->win_w && (b.y + i * dy) >= 0 && (b.y + i * dy) < input->win_h)
-            input->im.tab[(int)((int)(b.x + i * dx) + (int)(b.y + i * dy) * input->win_h)] = color;
-                //printf("2\n");
-        i++;
-    }
+    while (i++ < tall)
+	{
+		if ((i * dx + b.x) >= 0 && (i * dx + b.x) < input->win_w &&
+	(i * dy + b.y) < input->win_h && (i * dy + b.y) >= 0)
+			input->im.tab[((int)(i * dx + b.x) +
+	(int)(i * dy + b.y) * (input->im.size_line / 4))] = color;
+	}
+    printf("2\n");
 }
 
 double    ft_modulo(double nbr, double mod)

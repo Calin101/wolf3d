@@ -6,7 +6,7 @@
 #    By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/06/25 16:00:03 by calin        #+#   ##    ##    #+#        #
-#    Updated: 2019/09/12 06:40:07 by mwaterso    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/09/14 18:24:53 by mwaterso    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -32,7 +32,7 @@ OPENGL = -framework OpenGL -framework AppKit
 all: $(NAME)
 
 $(NAME): $(LIBMLX) $(LIBFT) $(OBJ)
-		gcc $(FLAGS) $^ $(OPENGL) -o $@ -g -fsanitize=address
+		gcc $(FLAGS) $^ $(OPENGL) -o $@ -g
 
 %.o: %.c $(INC)
 		gcc $(FLAGS) -c $< -o $@    

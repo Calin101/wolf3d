@@ -6,7 +6,7 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/10 19:27:54 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/13 20:17:25 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/14 18:58:00 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -92,78 +92,47 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 	double	height;
 	double	wallmin;
 	double	wallmax;
-	double	wallmoymax;
-	double	wallmoymin;
 	int		color = 0X0FFF00;
-	int ret = 0;
+	double ret = 0;
 	int i = 0;
 
 	height = 0;
-	//printf( "PLAYER[x %f y %f]                           CLOSEST[x %f y %f]\n", inputs->posplayer.x, inputs->posplayer.y, closest.x, closest.y);
 	if (closest.x == -1 && closest.y == -1)
 	{
 		height = 0;
 		wallmin = inputs->win_h / 2 - height;
 		wallmax = inputs->win_h / 2 + height;
-		printf("t\n\n\n\n");
 	}
 	else 
 	{  
 		ret = dist(inputs->posplayer, closest);
 		if (ret != 0)
 		{
-			height = inputs->wall_size / dist(inputs->posplayer, closest);
-			//height = (inputs->win_w / 2 - height);// + height) / 2;
+			height = (double)inputs->wall_size / (dist(inputs->posplayer, closest) * cos(thread->inputs->dirplayer - thread->alpha));
 			wallmin = inputs->win_h / 2 - height;
 			wallmax = inputs->win_h / 2 + height;
-			wallmoy = (wallmax + wallmin) / 2;
-			wallmax = wallmoy + (wallmoy - wallmax);
-			wallmin = wallmoy + (wallmoy - wallmin);
 		}
 		else
 		{
-			//dprintf(1, " POS PLAYER {x %f y %f}              CLOSEST {x %f y %f}\n", inputs->posplayer.x, inputs->posplayer.y, closest.x, closest.y);
 			wallmax = inputs->win_h;
 			wallmin = 0;
 		}
 	}
-	//dprintf(1, " DIST %f               HEIGHT %f\n", dist(inputs->posplayer, closest), height);
-	//dprintf(1, "\nWALLMAX %f                                             %f WALLMIN\n", wallmax, wallmin);
-	//sleep(1);
-	//dprintf(1, "%d\n", inputs->tab[(int)closest.y * inputs->xmax + (int)closest.x] == 2);
 	if (thread->text == 3)
 		color = 0xFF0000;
 	else if (thread->text == 2)
 		color = 0x0FFF00;
-	i = wallmax;
-		//printf("    wallmax %f      i = %d     wallmin %f\n", wallmax, i, wallmin);
-	while (i > wallmin)
+	i = -1;
+
+	while (++i < inputs->win_h)
 	{
-		inputs->im.tab[i * inputs->win_w + thread->index] = color;
-		i--;
+		if (i <= wallmin)
+			inputs->im.tab[i * inputs->win_w + thread->index] = 0x0000FF;
+		else if (i <= wallmax)
+			inputs->im.tab[i * inputs->win_w + thread->index] = color;
+		else
+			inputs->im.tab[i * inputs->win_w + thread->index] = 0xFFFFFF;
 	}
-	i = wallmax;
-	while (i <= inputs->win_h)
-	{
-		inputs->im.tab[i * inputs->win_w + thread->index] = 0xFFFFFF;
-		i++;
-	}
-	i = wallmin;
-	while (i >= 0)
-	{
-		inputs->im.tab[i * inputs->win_w + thread->index] = 0x0000FF;
-		i--;
-	}
-	/*else if (inputs->tab[(int)closest.y * inputs->xmax + (int)closest.x] == 0)
-	{
-		i = wallmax;
-		while (i > 0)
-		{
-			inputs->im.tab[i * inputs->win_w + inputs->index] = 0x00FFFF;
-			i--;
-		}
-	}*/
-	//dprintf(1, "HEIGHT %f B %d H %d\n", height, (int)b, (int)h);
 }
 
 int	ray(t_input *inputs, t_thread *thread)
@@ -173,14 +142,10 @@ int	ray(t_input *inputs, t_thread *thread)
 	int		dx;
 	int		dy;
 	t_fdot	closest;
-	//int i = 0;
 
 	dx = 0;
 	dy = 0;
-	//printf("ALP %f\n", inputs->alpha);
-	//inputs->alpha = modulo2pi(inputs->alpha);
 	closest = (t_fdot){.x = inputs->posplayer.x, .y = inputs->posplayer.y};
-	//dprintf(1, "DIST 1 [%f]                         DIST 2 [%f]\n", dist1, dist2);
 	while (colli(inputs, closest, thread) == 0)
 	{
 		if (thread->alpha > 0 && thread->alpha < M_PI)
@@ -193,21 +158,15 @@ int	ray(t_input *inputs, t_thread *thread)
 			p1.x = (int)inputs->posplayer.x + 1 + dx;
 		p1.y = thread->ray.a * p1.x + thread->ray.b;
 		p2.x = (p2.y - thread->ray.b) / thread->ray.a;
-
-		//dprintf(1, "POSPLAYER X %f Y %f\n", inputs->posplayer.x, inputs->posplayer.y);
-		//dprintf(1, "       P1 [x %f y %f]             P2 [x %f y %f]\n", p1.x, p1.y, p2.x, p2.y);
-		//sleep(1);
 		if (dist(inputs->posplayer, p1) < dist(inputs->posplayer, p2))
 		{
 			dx += thread->alpha < M_PI / 2 || thread->alpha > inputs->_3pi_2 ? 1 : -1;
-			closest = p1;                       
-			//dprintf(1, "DX %d	ALPHA %lf\n", dx, inputs->alpha / M_PI);
+			closest = p1;
 		}
 		else
 		{
 			dy += thread->alpha < M_PI ? -1 : 1;
 			closest = p2;
-			//dprintf(1, "DY %d	ALPHA %lf\n", dy, inputs->alpha / M_PI);
 		}
 		if (dist(inputs->posplayer, closest) > 75)
 		{
@@ -216,16 +175,7 @@ int	ray(t_input *inputs, t_thread *thread)
 
 		}
 	}
-	//printf("A = %lf		B = %lf\n", inputs->ray.a, inputs->ray.b);
-	//dprintf(1, "CLOSEST x %f         y %f\n", closest.x, closest.y);
-	//dprintf(1, "X %f\tY %f\n", closest.x, closest.y);
-	//printf("return = %f\n", dist(p1, p2));
-//	printf("P1{x %f y %f}                P2{x %f y %f}\n", p1.x, p1.y, p2.x, p2.y);
-	printf("dist = %lf		%d\n", (dist(inputs->posplayer, closest)), thread->index);
-	printf("a = %lf		b = %lf\n", thread->ray.a, thread->ray.b);
-	printf("ALPHA = %lf\n", thread->alpha / M_PI);
 	printline(inputs, closest, thread);
-	//print_line(thread->inputs, (t_dot){.x = thread->inputs->posplayer.x * 50, .y = thread->inputs->posplayer.y * 50}, (t_dot){.x = closest.x * 50, .y = closest.y * 50}, 0x00FF00);
 	return (1);
 }
 
