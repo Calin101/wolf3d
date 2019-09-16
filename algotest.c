@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   algotest.c                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/10 19:27:54 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/14 18:58:00 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/16 16:16:40 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -251,12 +251,13 @@ int init_var(t_input *inputs)
     return(1);
 }
 
-void	refresh(t_input *inputs)
+void	clearall(t_input *inputs)
 {
-	//mlx_clear_window(inputs->im.tab, inputs->win_ad);
-	mlx_destroy_image(inputs->im.tab, inputs->win_ad);
-	//inputs->im.ad = mlx_new_image(inputs->mlx_ad, inputs->win_w, inputs->win_h);
-    //inputs->im.tab = (int *)mlx_get_data_addr(inputs->im.ad, &(inputs->im.bits_per_pixel), &(inputs->im.size_line), &(inputs->im.endian));
+	mlx_destroy_image(inputs->mlx_ad, inputs->im.ad);
+	mlx_destroy_window(inputs->mlx_ad, inputs->win_ad);
+	free(inputs->tab);
+	free(inputs->tab_line);
+	exit(EXIT_SUCCESS);
 }
 
 int ft_keyboard(int key, t_input *inputs)
@@ -286,6 +287,8 @@ int ft_keyboard(int key, t_input *inputs)
 	}
     if (key == KEY_LEFT)
         inputs->dirplayer +=  (- 0.1 + (inputs->dirplayer + 0.1 < 0 ? 2 * M_PI : 0));
+	if (key == KEY_ESCAPE)
+		clearall(inputs);
 	inputs->index = 0;
 	create_thread(inputs);
     return(1);
