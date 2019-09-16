@@ -6,7 +6,7 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/15 15:38:23 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/13 19:00:50 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/16 19:52:25 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,6 +23,8 @@
 # include <stdio.h>
 # include <pthread.h>
 # define NB_THREAD              1
+# define NB_TEXTURE				1
+
 typedef struct  s_fdot
 {
    double               x;
@@ -43,6 +45,7 @@ typedef struct  s_wall
         double          zmax;
 }                               t_wall;
 
+
 typedef struct          s_image
 {
         void    *ad;
@@ -52,6 +55,13 @@ typedef struct          s_image
         int             endian;
 
 }                                       t_image;
+
+typedef    struct            s_texture
+{
+    int                 height;
+    int                    width;
+    t_image                im;
+}							t_texture;
 
 typedef struct			s_affine
 {
@@ -91,8 +101,9 @@ typedef struct          s_input
         int          xmax;
         int         ymax;
         double          zmax;
+		t_texture        tab_text[NB_TEXTURE];
+        char            *name_text[NB_TEXTURE];
 
-        t_wall  tab_tex[4];
         t_fdot  rotplayer;
         t_wall  rotscreen;
         int debug;
@@ -128,5 +139,7 @@ int             parse_file(t_input *data);
 int 			ft_keyboard(int key, t_input *inputs);
 int				raycasting(t_thread *thread);
 int				colli(t_input *inputs, t_fdot dot, t_thread *thread);
+void			print_text(t_dot y, t_texture *texture, double colonne, t_thread *thread);
+void			parse_text(t_input *inputs);
 
 #endif

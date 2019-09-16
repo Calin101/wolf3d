@@ -6,7 +6,7 @@
 #    By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/06/25 16:00:03 by calin        #+#   ##    ##    #+#        #
-#    Updated: 2019/09/14 18:24:53 by mwaterso    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/09/16 18:48:06 by mwaterso    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -15,13 +15,14 @@ NAME = wolf3d
 
 SRCS = algotest.c\
             parser.c\
+			texture.c\
             fct.c
 
 OBJ = $(SRCS:%.c=%.o)
 
 INC = wolfalgo.h
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS =  -Wall -Wextra -Werror##-fsanitize=address
 
 LIBFT = libft/libft.a
 

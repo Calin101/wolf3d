@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   algotest.c                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/10 19:27:54 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/16 16:16:40 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/16 20:41:36 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -75,12 +75,12 @@ int	colli(t_input *inputs, t_fdot dot, t_thread *thread)
 		dot.y = (int)inputs->posplayer.y;*/
 	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 2)
 	{
-		thread->text = 2;
+		thread->text = 0;
 		return(1);
 	}
 	if	(inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 3)
 	{
-		thread->text = 3;
+		thread->text = 0;
 		return (1);
 	}
 	else
@@ -92,11 +92,13 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 	double	height;
 	double	wallmin;
 	double	wallmax;
+	float	colonne;
 	int		color = 0X0FFF00;
 	double ret = 0;
 	int i = 0;
 
 	height = 0;
+	colonne = (fmod(closest.x, 1) ? fmod(closest.x, 1) : fmod(closest.y, 1));
 	if (closest.x == -1 && closest.y == -1)
 	{
 		height = 0;
@@ -129,7 +131,10 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 		if (i <= wallmin)
 			inputs->im.tab[i * inputs->win_w + thread->index] = 0x0000FF;
 		else if (i <= wallmax)
-			inputs->im.tab[i * inputs->win_w + thread->index] = color;
+		{
+			print_text((t_dot){.x = (wallmax), .y = wallmin}, &thread->inputs->tab_text[thread->text], colonne, thread);
+			i = wallmax;
+		}
 		else
 			inputs->im.tab[i * inputs->win_w + thread->index] = 0xFFFFFF;
 	}
@@ -314,8 +319,12 @@ int main(int argc, char ** argv)
 	}*/
     //printf("x %f y %f z %f\n", inputs.player_pos.x, inputs.player_pos.y, inputs.player_pos.z);
     init_var(&inputs);
+	printf("2.5\n");
+	parse_text(&inputs);
 	printf("3\n");
-    create_thread(&inputs);
+	//while(++i)
+	//	printf("%d\n", inputs.tab_text[0].im.tab[i]);
+    //create_thread(&inputs);
 	printf("4\n");
 	mlx_put_image_to_window(inputs.im.tab, inputs.win_ad, inputs.im.ad, 0, 0);
     mlx_hook(inputs.win_ad, 2, 0, &ft_keyboard, &inputs);
