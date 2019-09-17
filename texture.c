@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   texture.c                                        .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/16 16:27:15 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/16 21:59:27 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/17 20:03:34 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,19 +33,16 @@ void	print_text(t_dot y, t_texture *texture, double p, t_thread *thread)
 
 void    parse_text(t_input *inputs)
 {
-	//printf("SI CA EGFAULT ICI ON EST NUL\n");
     int i;
     i = 0;
     while (i < NB_TEXTURE)
     {
-        if (!(inputs->tab_text[i].im.ad = mlx_xpm_file_to_image(inputs->mlx_ad, "texture/titi.xpm", &inputs->tab_text[i].width, &inputs->tab_text[i].height)))
+        if (!(inputs->tab_text[i].im.ad = mlx_xpm_file_to_image(inputs->mlx_ad, "texture/text.xpm", &inputs->tab_text[i].width, &inputs->tab_text[i].height)))
 		{
 			ft_putendl("erreur texture\n");
 			return;
 		}
-		//mlx_put_image_to_window(inputs->mlx_ad, inputs->win_ad, inputs->tab_text[i].im.ad, 0, 0);
         inputs->tab_text[i].im.tab = (int *)mlx_get_data_addr(inputs->tab_text[i].im.ad, &(inputs->tab_text[i].im.bits_per_pixel), &(inputs->tab_text[i].im.size_line), &(inputs->tab_text[i].im.endian));
-	//	printf("BTM\n");
         i++;
     }
 }
