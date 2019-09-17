@@ -6,7 +6,7 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/10 19:27:54 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/16 20:41:36 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/17 20:03:42 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -62,17 +62,6 @@ int	colli(t_input *inputs, t_fdot dot, t_thread *thread)
 	//printf("%d\n", inputs->xmax);
 	if (dot.x < 0 || dot.y < 0 || dot.x > inputs->xmax || dot.y > inputs->ymax)
 		return(0);
-
-	/****************************************************/
-	//dprintf(1, "IN TAB [%d]\n", inputs->tab[(int)dot.y * inputs->xmax + (int)dot.x]);
-	//dprintf(1, "xmax %d\n", inputs->xmax);
-	//dprintf(1, " POS PLAYER X %f Y %f\n", inputs->posplayer.x, inputs->posplayer.y);
-	//dprintf(1, " return %d\n", (inputs->tab[(int)dot.y * inputs->xmax + (int)dot.x] == 2 ? 1 : 0));
-	//sleep(1);
-	/* if (inputs->alpha > 0 && inputs->alpha < M_PI)
-		dot.y = (int)inputs->posplayer.y - 1;
-	else
-		dot.y = (int)inputs->posplayer.y;*/
 	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 2)
 	{
 		thread->text = 0;
@@ -130,7 +119,7 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 	{
 		if (i <= wallmin)
 			inputs->im.tab[i * inputs->win_w + thread->index] = 0x0000FF;
-		else if (i <= wallmax)
+		else if (i <= wallmax && height != 0)
 		{
 			print_text((t_dot){.x = (wallmax), .y = wallmin}, &thread->inputs->tab_text[thread->text], colonne, thread);
 			i = wallmax;
