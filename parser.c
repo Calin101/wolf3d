@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   parser.c                                         .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/16 17:49:29 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/09 16:00:50 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/17 20:05:51 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -58,8 +58,8 @@ void	filltab(t_input *data)
 	double	count_y;
 	t_index	index;
 
-	index = (t_index){.i = 0, .j = 0};
 	count_y = 0;
+	index = (t_index){.i = 0, .j = 0};
 	while (get_next_line(data->fd3, &line))
 	{
 		tmp_tab = ft_strsplit(line, ' ');
@@ -88,7 +88,6 @@ int		parse_file(t_input *data)
 	fill_tab_line(data);
 	data->xmax = 0;
 	data->ymax = 0;
-	//printf("count line = %d\n", data->countline);
 	while (i < data->countline)
 	{
 		if (data->xmax < data->tab_line[i])
@@ -96,10 +95,9 @@ int		parse_file(t_input *data)
 		data->totalnb += data->tab_line[i++];
 	}
 	data->ymax = i;
-	//printf(" x max {%f} y max {%f}\n", data->xmax, data->ymax);
 	if (!(data->tab = malloc(sizeof(int) * data->totalnb)))
 		return (-1);
-	data->tab[data->totalnb] = 0;
+//	data->tab[data->totalnb] = 0;
 	filltab(data);
 	return (0);
 }

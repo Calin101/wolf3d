@@ -6,7 +6,7 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/16 16:27:15 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/16 22:02:24 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/17 21:04:01 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,21 +19,49 @@ void	print_text(t_dot y, t_texture *texture, double p, t_thread *thread)
 	int		x_texture;
 	double	y_texture;
 
+	if (y.x == y.y)
+		return;
 	x_texture = p * texture->width;
 	y_texture = 0;
-	dy_texture = texture->height / (double)(y.x - y.y);
+	dy_texture = (texture->height - 1) / (double)(y.x - y.y);
+	//printf("print text : a=%d		b=%d			%lf\n", y.x, y.y, dy_texture);
 	while (y.y < y.x)
-    {
+  {
+	//	if (dy_texture == (texture->height / (double)700))
+	//		printf("y_texture = %lf\n", y_texture);
 		thread->inputs->im.tab[y.y * thread->inputs->win_w + thread->index] =\
 				texture->im.tab[(int)y_texture * texture->width + x_texture];
 		y_texture += dy_texture;
 		y.y++;
 	}
+	printf("print text end\n");
+}
+
+void print_sky(int max, t_thread *thread, t_input *inputs)
+{
+	int i;
+
+	i = -1;
+	while (++i < max)
+		inputs->im.tab[i * inputs->win_w + thread->index] = SKYCOLOR;
+}
+
+void print_ground(int min, t_thread *thread, t_input *inputs)
+{
+	int i;
+
+	i = min - 1;
+	printf("MIN = %d\n", min);
+	while (++i < inputs->win_h - 2)
+	{
+	//	printf("i = %d\n\n", i);
+		inputs->im.tab[i * inputs->win_w + thread->index] = GROUNDCOLOR;
+	}
+		printf("M%d\n", min);
 }
 
 void    parse_text(t_input *inputs)
 {
-	//printf("SI CA EGFAULT ICI ON EST NUL\n");
     int i;
     i = 0;
     while (i < NB_TEXTURE)
@@ -43,9 +71,7 @@ void    parse_text(t_input *inputs)
 			ft_putendl("erreur texture\n");
 			return;
 		}
-		//mlx_put_image_to_window(inputs->mlx_ad, inputs->win_ad, inputs->tab_text[i].im.ad, 0, 0);
         inputs->tab_text[i].im.tab = (int *)mlx_get_data_addr(inputs->tab_text[i].im.ad, &(inputs->tab_text[i].im.bits_per_pixel), &(inputs->tab_text[i].im.size_line), &(inputs->tab_text[i].im.endian));
-	//	printf("BTM\n");
         i++;
     }
 }

@@ -6,7 +6,7 @@
 #    By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/06/25 16:00:03 by calin        #+#   ##    ##    #+#        #
-#    Updated: 2019/09/16 18:48:06 by mwaterso    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/09/17 20:31:01 by mwaterso    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -16,13 +16,15 @@ NAME = wolf3d
 SRCS = algotest.c\
             parser.c\
 			texture.c\
+			utils.c\
+			main.c\
             fct.c
 
 OBJ = $(SRCS:%.c=%.o)
 
 INC = wolfalgo.h
 
-FLAGS =  -Wall -Wextra -Werror##-fsanitize=address
+FLAGS =  -Wall -Wextra -Werror -fsanitize=address
 
 LIBFT = libft/libft.a
 
@@ -36,7 +38,7 @@ $(NAME): $(LIBMLX) $(LIBFT) $(OBJ)
 		gcc $(FLAGS) $^ $(OPENGL) -o $@ -g
 
 %.o: %.c $(INC)
-		gcc $(FLAGS) -c $< -o $@    
+		gcc $(FLAGS) -c $< -o $@
 
 $(LIBFT):
 		make -C libft/
@@ -52,7 +54,7 @@ clean:
 fclean: clean
 		make fclean -C libft/
 		rm -rf $(NAME)
-    
+
 re: fclean all
 		make re -C minilibx_macos/
 

@@ -6,14 +6,14 @@
 /*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/21 17:41:17 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/21 17:42:20 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/17 20:19:33 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #ifndef KEYBOARD_H
 # define KEYBOARD_H
- 
+
 # define KEY_ESCAPE         53
 # define KEY_F1             122
 # define KEY_F2             120
@@ -131,5 +131,5 @@
 # define KEY_PAD_ADD        69
 # define KEY_PAD_ENTER      76
 # define KEY_PAD_DOT        65
- 
+
 #endif
