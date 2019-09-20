@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   utils.c                                          .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/17 18:27:08 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/17 20:33:06 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/19 20:57:36 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,10 +24,15 @@ int		init_var(t_input *inputs)
 	inputs->index = 0;
 	inputs->fov = M_PI / 2;
 	inputs->dirplayer = M_PI / 2;
-	inputs->win_w = 700;
-	inputs->win_h = 700;
+	inputs->win_w = 1500;
+	inputs->win_h = 1500;
+	inputs->x_hitbox.x = -0.25;
+	inputs->x_hitbox.y = 0.25;
+	inputs->y_hitbox.x = -0.25;
+	inputs->y_hitbox.y = 0.25;
 	inputs->_3pi_2 = M_PI_2 * 3;
 	inputs->wall_size = 150;
+	fill_texture_tab(inputs);
 	inputs->oldposplayer = inputs->posplayer;
 	inputs->mlx_ad = mlx_init();
 	inputs->win_ad = mlx_new_window(inputs->mlx_ad, inputs->win_w,
@@ -45,7 +50,7 @@ void	clearall(t_input *inputs)
 	mlx_destroy_image(inputs->mlx_ad, inputs->im.ad);
 	mlx_destroy_window(inputs->mlx_ad, inputs->win_ad);
 	free(inputs->tab);
-	free(inputs->tab_line);
+	//free(inputs->tab_line);
 	exit(EXIT_SUCCESS);
 }
 
@@ -65,7 +70,8 @@ int		ft_keyboard(int key, t_input *inputs)
 		inputs->posplayer.y -= 0.25;
 	if (key == KEY_PAD_8 || key == KEY_PAD_5 || key == KEY_PAD_4 || key == KEY_PAD_6)
 	{
-		if (inputs->tab[(int)inputs->posplayer.x + (int)inputs->posplayer.y * inputs->xmax] > 1)
+		if (inputs->tab[(int)(inputs->posplayer.x + inputs->x_hitbox.x) + ((int)(inputs->posplayer.y + inputs->y_hitbox.x)) * inputs->xmax] > 0 || 
+		inputs->tab[(int)(inputs->posplayer.y + inputs->x_hitbox.y) + ((int)(inputs->posplayer.y + inputs->y_hitbox.y)) * inputs->xmax] > 0)
 			inputs->posplayer = inputs->oldposplayer;
 		else
 			inputs->oldposplayer = inputs->posplayer;
@@ -74,6 +80,10 @@ int		ft_keyboard(int key, t_input *inputs)
 	{
 		inputs->dirplayer += 0.1 +
 		(inputs->dirplayer + 0.1 > 2 * M_PI ? -2 * M_PI : 0);
+	}
+	if (key == KEY_P)
+	{
+		printf("x %lf y %lf\n", inputs->posplayer.x, inputs->posplayer.y);
 	}
 	if (key == KEY_LEFT)
 	{

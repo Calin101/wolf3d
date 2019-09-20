@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   main.c                                           .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/17 20:29:39 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/17 20:31:15 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/19 18:06:39 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,6 +24,7 @@ int		main(int argc, char **argv)
 	parse_file(&inputs);
 	init_var(&inputs);
 	parse_text(&inputs);
+	create_thread(&inputs);
 	mlx_put_image_to_window(inputs.im.tab, inputs.win_ad, inputs.im.ad, 0, 0);
 	mlx_hook(inputs.win_ad, 2, 0, &ft_keyboard, &inputs);
 	mlx_loop(inputs.mlx_ad);

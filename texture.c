@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   texture.c                                        .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/16 16:27:15 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/17 21:04:01 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/19 20:11:34 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,7 +34,7 @@ void	print_text(t_dot y, t_texture *texture, double p, t_thread *thread)
 		y_texture += dy_texture;
 		y.y++;
 	}
-	printf("print text end\n");
+	//printf("print text end\n");
 }
 
 void print_sky(int max, t_thread *thread, t_input *inputs)
@@ -51,13 +51,13 @@ void print_ground(int min, t_thread *thread, t_input *inputs)
 	int i;
 
 	i = min - 1;
-	printf("MIN = %d\n", min);
+	//printf("MIN = %d\n", min);
 	while (++i < inputs->win_h - 2)
 	{
 	//	printf("i = %d\n\n", i);
 		inputs->im.tab[i * inputs->win_w + thread->index] = GROUNDCOLOR;
 	}
-		printf("M%d\n", min);
+		//printf("M%d\n", min);
 }
 
 void    parse_text(t_input *inputs)
@@ -66,7 +66,7 @@ void    parse_text(t_input *inputs)
     i = 0;
     while (i < NB_TEXTURE)
     {
-        if (!(inputs->tab_text[i].im.ad = mlx_xpm_file_to_image(inputs->mlx_ad, "texture/text.xpm", &inputs->tab_text[i].width, &inputs->tab_text[i].height)))
+        if (!(inputs->tab_text[i].im.ad = mlx_xpm_file_to_image(inputs->mlx_ad, inputs->name_text[i], &inputs->tab_text[i].width, &inputs->tab_text[i].height)))
 		{
 			ft_putendl("erreur texture\n");
 			return;

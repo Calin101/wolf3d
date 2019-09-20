@@ -6,7 +6,7 @@
 /*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/16 17:49:29 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/17 20:05:51 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/19 22:17:18 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,12 +19,16 @@ int		count_lines(t_input *data)
 	data->countline = 0;
 	while (get_next_line(data->fd, &line))
 	{
+		printf("%zu\n", ft_strlen(line));
+		if (ft_strlen(line) <= 1)
+		{
+			ft_putendl("Error empty file");
+			exit(1);
+		}
 		data->countline++;
 		ft_strdel(&line);
 	}
-	if (!(data->tab_line = malloc(sizeof(int) * data->countline)))
-		return (-1);
-	//data->tab_line[data->countline] = 0;
+	data->ymax = data->countline;
 	return (0);
 }
 
@@ -36,6 +40,7 @@ void	fill_tab_line(t_input *data)
 	t_index	index;
 
 	count_nb = 0;
+	data->xmax = 0;
 	index = (t_index){.i = 0, .j = 0};
 	while (get_next_line(data->fd2, &line))
 	{
@@ -44,7 +49,14 @@ void	fill_tab_line(t_input *data)
 		index.i = 0;
 		while (tmp_tab[index.i++])
 			count_nb++;
-		data->tab_line[index.j] = count_nb;
+		if (index.j != 0 && data->xmax != count_nb)
+		{
+			ft_putendl("Error size line in map file");
+			sleep(5);
+			exit(1);
+		}
+		data->totalnb += count_nb;
+		data->xmax = count_nb;
 		index.j++;
 		ft_2dstrdel(&tmp_tab);
 		ft_strdel(&line);
@@ -66,7 +78,7 @@ void	filltab(t_input *data)
 		index.i = 0;
 		while (tmp_tab[index.i])
 		{
-			if (ft_atoi(tmp_tab[index.i]) == 1)
+			if (ft_atoi(tmp_tab[index.i]) == -1)
 			{
 				data->posplayer.x = index.i;
 				data->posplayer.y = count_y;
@@ -79,6 +91,15 @@ void	filltab(t_input *data)
 	}
 }
 
+void	fill_texture_tab(t_input *data)
+{
+	data->name_text[0] = "texture/titi.xpm";
+	data->name_text[1] = "texture/text.xpm";
+	data->name_text[2] = "texture/mwaterso.xpm";
+	data->name_text[3] = "texture/wall.xpm";
+	data->name_text[4] = "texture/wall2.xpm";
+}
+
 int		parse_file(t_input *data)
 {
 	int		i;
@@ -86,18 +107,8 @@ int		parse_file(t_input *data)
 	i = 0;
 	count_lines(data);
 	fill_tab_line(data);
-	data->xmax = 0;
-	data->ymax = 0;
-	while (i < data->countline)
-	{
-		if (data->xmax < data->tab_line[i])
-			data->xmax = data->tab_line[i];
-		data->totalnb += data->tab_line[i++];
-	}
-	data->ymax = i;
 	if (!(data->tab = malloc(sizeof(int) * data->totalnb)))
 		return (-1);
-//	data->tab[data->totalnb] = 0;
 	filltab(data);
 	return (0);
 }

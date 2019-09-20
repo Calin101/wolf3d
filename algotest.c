@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   algotest.c                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/10 19:27:54 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/17 21:05:46 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/19 21:05:42 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -55,16 +55,40 @@ int		colli(t_input *inputs, t_fdot dot, t_thread *thread)
 	//	printf("colli3\n");
 	if (dot.x < 0 || dot.y < 0 || dot.x > inputs->xmax || dot.y > inputs->ymax)
 		return (0);
-	//	printf("index = %d\n", ((int)dot.y) * inputs->xmax + (int)dot.x);
-	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 2)
+	/*if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 2)
 	{
 		thread->text = 0;
 		return (1);
 	}
-	//	printf("colli4\n");
 	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 3)
 	{
 		thread->text = 0;
+		return (1);
+	}*/
+	//printf("xmax = %d		ymax = %d\n \n \n", inputs->xmax, inputs->ymax);
+	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 1)
+	{
+		thread->text = 0;
+		return (1);
+	}
+	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 2)
+	{
+		thread->text = 1;
+		return (1);
+	}
+	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 3)
+	{
+		thread->text = 2;
+		return (1);
+	}
+	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 4)
+	{
+		thread->text = 3;
+		return (1);
+	}
+	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 5)
+	{
+		thread->text = 4;
 		return (1);
 	}
 	else
@@ -90,14 +114,14 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 	}
 	else
 	{
-		printf("dist = %lf\n", dist(inputs->posplayer, closest));
+		//printf("dist = %lf\n", dist(inputs->posplayer, closest));
 		if (dist(inputs->posplayer, closest) * 100 > 0.0001)
 		{
 			height = (double)inputs->wall_size / (dist(inputs->posplayer,
 			closest) * cos(thread->inputs->dirplayer - thread->alpha));
 			wallmin = inputs->win_h / 2 - height;
 			wallmax = inputs->win_h / 2 + height;
-			printf("%d			%lf		%lf\n", wallmax, dist(inputs->posplayer, closest) * 100, dist(inputs->posplayer, closest));
+			//printf("%d			%lf		%lf\n", wallmax, dist(inputs->posplayer, closest) * 100, dist(inputs->posplayer, closest));
 		}
 		else
 		{
@@ -110,7 +134,7 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 	else if (thread->text == 2)
 		color = 0x0FFF00;
 	if (wallmax > inputs->win_h)
-		wallmax = 699;
+		wallmax = inputs->win_h - 1;
 	else
 		print_ground(wallmax, thread, inputs);
 	if (wallmin < 0)

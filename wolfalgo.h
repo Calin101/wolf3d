@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   wolfalgo.h                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/15 15:38:23 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/17 23:14:22 by mwaterso    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/19 21:35:56 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,7 +23,7 @@
 # include <stdio.h>
 # include <pthread.h>
 # define NB_THREAD              1
-# define NB_TEXTURE							1
+# define NB_TEXTURE							5
 #	define SKYCOLOR					0x0000FF
 # define GROUNDCOLOR			0xFFFFFF
 
@@ -96,7 +96,6 @@ typedef struct		s_input
 	int				fd2;
 	int				fd3;
 	int				*tab;
-	int				*tab_line;
 	int				scale;
 	int				wall_size;
 	int				xmax;
@@ -115,6 +114,8 @@ typedef struct		s_input
 	int				hit;
 	int				index;
 	t_image			im;
+	t_fdot			x_hitbox;
+	t_fdot			y_hitbox;
 }					t_input;
 
 typedef struct		s_index
@@ -123,9 +124,10 @@ typedef struct		s_index
 	int				j;
 }					t_index;
 
+void				fill_texture_tab(t_input *data);
 void 				print_ground(int min, t_thread *thread, t_input *inputs);
 void 				print_sky(int max, t_thread *thread, t_input *inputs);
-double			dist(t_fdot p1, t_fdot p2);
+double				dist(t_fdot p1, t_fdot p2);
 void				print_line(t_input *input, t_dot a, t_dot b, int color);
 void				*printscreen(void *thread);
 void				clear_im(t_input *data);
