@@ -6,7 +6,7 @@
 /*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/16 17:49:29 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/19 22:17:18 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/20 18:20:38 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,7 +19,7 @@ int		count_lines(t_input *data)
 	data->countline = 0;
 	while (get_next_line(data->fd, &line))
 	{
-		printf("%zu\n", ft_strlen(line));
+		printf("blu%zu\n", ft_strlen(line));
 		if (ft_strlen(line) <= 1)
 		{
 			ft_putendl("Error empty file");
@@ -52,7 +52,6 @@ void	fill_tab_line(t_input *data)
 		if (index.j != 0 && data->xmax != count_nb)
 		{
 			ft_putendl("Error size line in map file");
-			sleep(5);
 			exit(1);
 		}
 		data->totalnb += count_nb;
@@ -69,8 +68,10 @@ void	filltab(t_input *data)
 	char	**tmp_tab;
 	double	count_y;
 	t_index	index;
+	int		check_player;
 
 	count_y = 0;
+	check_player = 0;
 	index = (t_index){.i = 0, .j = 0};
 	while (get_next_line(data->fd3, &line))
 	{
@@ -80,14 +81,31 @@ void	filltab(t_input *data)
 		{
 			if (ft_atoi(tmp_tab[index.i]) == -1)
 			{
+				check_player += 1;
 				data->posplayer.x = index.i;
 				data->posplayer.y = count_y;
+				printf("posX %f posY %f            Xmax %d Ymax %d\n", data->posplayer.x, data->posplayer.y, data->xmax, data->ymax);
+				if (data->posplayer.y + 1 >= data->ymax || data->posplayer.y -1 < 0)
+				{
+					ft_putendl("Error player pos");
+					exit(1);
+				}
+				if (data->posplayer.x + 1 >= data->xmax || data->posplayer.x -1 < 0)
+				{
+					ft_putendl("Error player pos");
+					exit(1);
+				}
 			}
 			data->tab[index.j++] = ft_atoi(tmp_tab[index.i++]);
 		}
 		count_y++;
 		ft_strdel(&line);
 		ft_2dstrdel(&tmp_tab);
+	}
+	if (check_player != 1)
+	{
+		ft_putendl("Error, map need only one player");
+		exit (1);
 	}
 }
 
