@@ -6,12 +6,12 @@
 /*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/07/09 16:10:44 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/17 20:31:52 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/24 18:33:15 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "wolfalgo.h"
+#include "wolf.h"
 
 void	clear_im(t_input *data)
 {
@@ -60,4 +60,19 @@ void	print_line(t_input *input, t_dot a, t_dot b, int color)
 			input->im.tab[((int)(i * dx + b.x) +
 			(int)(i * dy + b.y) * (input->im.size_line / 4))] = color;
 	}
+}
+
+void	error(t_input *data)
+{
+	ft_putendl("Parsing error. INVALID MAP");
+	free(data->tab);
+	exit(EXIT_SUCCESS);
+}
+
+void	fill_texture_tab(t_input *data)
+{
+	data->name_text[0] = "texture/insidecube.xpm";
+	data->name_text[1] = "texture/minimal.xpm";
+	data->name_text[2] = "texture/yolodsada.xpm";
+	data->name_text[3] = "texture/rosace.xpm";
 }

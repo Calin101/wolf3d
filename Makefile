@@ -6,25 +6,27 @@
 #    By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/06/25 16:00:03 by calin        #+#   ##    ##    #+#        #
-#    Updated: 2019/09/19 22:17:18 by calin       ###    #+. /#+    ###.fr      #
+#    Updated: 2019/09/24 18:27:30 by calin       ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
 
 NAME = wolf3d
 
-SRCS = algotest.c\
+SRCS = algo.c\
             parser.c\
 			texture.c\
 			utils.c\
+			raycasting.c\
+			key_event.c\
 			main.c\
             fct.c
 
 OBJ = $(SRCS:%.c=%.o)
 
-INC = wolfalgo.h
+INC = wolf.h
 
-FLAGS =  -Wall -Wextra -Werror -fsanitize=address
+FLAGS =  -Wall -Wextra -Werror
 
 LIBFT = libft/libft.a
 
