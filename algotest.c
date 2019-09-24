@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   algotest.c                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/10 19:27:54 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/19 21:05:42 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/24 14:46:34 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,21 +18,37 @@ void	create_thread(t_input *input)
 	int		i;
 	double	alpha;
 
-	alpha = input->dirplayer - input->fov / 2;
 	i = 0;
 	clear_im(input);
 	while (i < NB_THREAD)
 	{
+		alpha = (input->dirplayer - input->fov / 2) +
+		((double)((float)i / (float)NB_THREAD) * input->fov);
+		//printf("alpho %lf\n", alpha);
+		if (alpha < 0)
+		{
+			alpha += M_PI * 2;
+		}
+		if (alpha > 2 * M_PI)
+		{
+			alpha -= M_PI * 2;
+		}
+		//printf("apha %lf\n", alpha);
+		/*
 		while (alpha < (input->dirplayer - input->fov / 2) +
 		((double)((float)i / (float)NB_THREAD) * input->fov))
+		{
+			//printf("THREAD %lf\n", alpha);
 			alpha += input->step_ray - (alpha +
 			input->step_ray > M_PI * 2 ? 2 * M_PI : 0);
+		}*/ 
 		input->thread_tab[i].alpha = alpha;
 		input->thread_tab[i].start = (i * input->win_w) / NB_THREAD;
 		input->thread_tab[i].end = ((i + 1) * (input->win_w)) / NB_THREAD;
 		input->thread_tab[i].inputs = input;
 		pthread_create(&input->thread_tab[i].thread, NULL,
 		&printscreen, &input->thread_tab[i]);
+	//	printf("thread : %d\nalpha %lf\n", i, input->thread_tab[i].alpha);
 		i++;
 	}
 	i = 0;
@@ -43,11 +59,11 @@ void	create_thread(t_input *input)
 
 int		colli(t_input *inputs, t_fdot dot, t_thread *thread)
 {
-//	printf("colli\n");
+	//printf("colli\n");
 	if (dot.x - (int)dot.x == 0)
 	{
 		dot.x += (thread->alpha < M_PI_2 ||
-		thread->alpha > inputs->_3pi_2) ? 0 : -1;
+		thread->alpha > inputs->m3pi_2) ? 0 : -1;
 	}
 	//	printf("colli2\n");
 	if (dot.y - (int)dot.y == 0)
@@ -66,8 +82,9 @@ int		colli(t_input *inputs, t_fdot dot, t_thread *thread)
 		return (1);
 	}*/
 	//printf("xmax = %d		ymax = %d\n \n \n", inputs->xmax, inputs->ymax);
-	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 1)
-	{
+	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] > 0)
+		return(1);
+	/*{
 		thread->text = 0;
 		return (1);
 	}
@@ -90,7 +107,7 @@ int		colli(t_input *inputs, t_fdot dot, t_thread *thread)
 	{
 		thread->text = 4;
 		return (1);
-	}
+	}*/
 	else
 		return (0);
 }
@@ -98,19 +115,20 @@ int		colli(t_input *inputs, t_fdot dot, t_thread *thread)
 void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 {
 	double	height;
-	int	wallmin;
-	int	wallmax;
+	int		wallmin;
+	int		wallmax;
 	float	colonne;
 	int		color;
 
 	height = 0;
 	color = 0X0FFF00;
 	colonne = (fmod(closest.x, 1) ? fmod(closest.x, 1) : fmod(closest.y, 1));
+	//printf("printline index = %d\n", thread->index);
 	if (closest.x == -1 && closest.y == -1)
 	{
 		height = 0;
-		wallmin = inputs->win_h / 2 - height;
-		wallmax = inputs->win_h / 2 + height;
+		wallmin = (inputs->win_h / 2 - height) + inputs->intotherunmf * ((double)inputs->win_h / 1000);
+		wallmax = (inputs->win_h / 2 + height) + inputs->intotherunmf * ((double)inputs->win_h / 1000);
 	}
 	else
 	{
@@ -119,8 +137,10 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 		{
 			height = (double)inputs->wall_size / (dist(inputs->posplayer,
 			closest) * cos(thread->inputs->dirplayer - thread->alpha));
-			wallmin = inputs->win_h / 2 - height;
-			wallmax = inputs->win_h / 2 + height;
+			wallmin = inputs->win_h / 2 - height + inputs->intotherunmf * ((double)inputs->win_h / 1000);
+			wallmax = inputs->win_h / 2 + height + inputs->intotherunmf * ((double)inputs->win_h / 1000);
+			//if (wallmin <= 0)
+			//	printf("%f\n", cos(thread->inputs->dirplayer - thread->alpha));
 			//printf("%d			%lf		%lf\n", wallmax, dist(inputs->posplayer, closest) * 100, dist(inputs->posplayer, closest));
 		}
 		else
@@ -128,6 +148,22 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 			wallmax = inputs->win_h;
 			wallmin = 0;
 		}
+	}
+	if (closest.x != -1 || closest.y != -1)
+	{
+		if(fmod(closest.x, 1))
+			if(thread->alpha > M_PI)
+				thread->text = 3;
+			else
+				thread->text = 4;
+		else
+			if(!(thread->alpha < M_PI_2 || thread->alpha > inputs->m3pi_2))
+				thread->text = 1;
+			else
+				thread->text = 2;
+			
+		print_text((t_dot){.x = (wallmax), .y = wallmin},
+		&thread->inputs->tab_text[thread->text], colonne, thread);
 	}
 	if (thread->text == 3)
 		color = 0xFF0000;
@@ -141,9 +177,7 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 		wallmin  = 0;
 	else
 		print_sky(wallmin, thread, inputs);
-	if (closest.x != -1 || closest.y != -1)
-		print_text((t_dot){.x = (wallmax), .y = wallmin},
-		&thread->inputs->tab_text[thread->text], colonne, thread);
+	//printf("end printline  index = %d\n", thread->index);
 }
 
 int		ray(t_input *inputs, t_thread *thread)
@@ -163,7 +197,7 @@ int		ray(t_input *inputs, t_thread *thread)
 			p2.y = (int)inputs->posplayer.y + dy;
 		else
 			p2.y = (int)inputs->posplayer.y + 1 + dy;
-		if (thread->alpha > M_PI_2 && thread->alpha < inputs->_3pi_2)
+		if (thread->alpha > M_PI_2 && thread->alpha < inputs->m3pi_2)
 			p1.x = (int)inputs->posplayer.x + dx;
 		else
 			p1.x = (int)inputs->posplayer.x + 1 + dx;
@@ -172,7 +206,7 @@ int		ray(t_input *inputs, t_thread *thread)
 		if (dist(inputs->posplayer, p1) < dist(inputs->posplayer, p2))
 		{
 			dx += thread->alpha < M_PI / 2 ||
-			thread->alpha > inputs->_3pi_2 ? 1 : -1;
+			thread->alpha > inputs->m3pi_2 ? 1 : -1;
 			closest = p1;
 		}
 		else
@@ -199,6 +233,7 @@ int		raycasting(t_thread *thread)
 		thread->alpha += 2 * M_PI;
 	while (thread->end > ++i)
 	{
+		//printf("i = %d\n", i);
 		thread->index = i;
 		thread->ray.a = -tan(thread->alpha);
 		thread->ray.b = thread->inputs->posplayer.y -

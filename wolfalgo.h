@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   wolfalgo.h                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/15 15:38:23 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/19 21:35:56 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/24 14:49:03 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -22,10 +22,10 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <pthread.h>
-# define NB_THREAD              1
+# define NB_THREAD              			8
 # define NB_TEXTURE							5
-#	define SKYCOLOR					0x0000FF
-# define GROUNDCOLOR			0xFFFFFF
+#	define SKYCOLOR					0x320000
+# define GROUNDCOLOR			0x000000
 
 typedef struct		s_fdot
 {
@@ -100,7 +100,7 @@ typedef struct		s_input
 	int				wall_size;
 	int				xmax;
 	int				ymax;
-	t_fdot		oldposplayer;
+	t_fdot			oldposplayer;
 	char			*name_text[NB_TEXTURE];
 	t_texture		tab_text[NB_TEXTURE];
 	t_fdot			rotplayer;
@@ -110,7 +110,10 @@ typedef struct		s_input
 	double			dirplayer;
 	double			fov;
 	double			step_ray;
-	double			_3pi_2;
+	double			m3pi_2;
+	double			vitesse;
+	int				running;
+	int				intotherunmf;
 	int				hit;
 	int				index;
 	t_image			im;

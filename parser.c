@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   parser.c                                         .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/16 17:49:29 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/20 18:20:38 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/24 14:49:32 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -113,7 +113,7 @@ void	fill_texture_tab(t_input *data)
 {
 	data->name_text[0] = "texture/titi.xpm";
 	data->name_text[1] = "texture/text.xpm";
-	data->name_text[2] = "texture/mwaterso.xpm";
+	data->name_text[2] = "texture/yolo.xpm";
 	data->name_text[3] = "texture/wall.xpm";
 	data->name_text[4] = "texture/wall2.xpm";
 }

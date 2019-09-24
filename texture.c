@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   texture.c                                        .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*   By: mwaterso <mwaterso@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/16 16:27:15 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/19 20:11:34 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/23 19:06:29 by mwaterso    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,18 +19,20 @@ void	print_text(t_dot y, t_texture *texture, double p, t_thread *thread)
 	int		x_texture;
 	double	y_texture;
 
+	
 	if (y.x == y.y)
 		return;
 	x_texture = p * texture->width;
-	y_texture = 0;
-	dy_texture = (texture->height - 1) / (double)(y.x - y.y);
+	y_texture = 0;// + (thread->inputs->win_h - (y.x - y.y)) / 2;
+	dy_texture = ((texture->height - 1 ))/*- (thread->inputs->win_h - (y.x - y.y))* / 2))*/ / (double)(y.x - y.y) ;
 	//printf("print text : a=%d		b=%d			%lf\n", y.x, y.y, dy_texture);
 	while (y.y < y.x)
   {
 	//	if (dy_texture == (texture->height / (double)700))
-	//		printf("y_texture = %lf\n", y_texture);
-		thread->inputs->im.tab[y.y * thread->inputs->win_w + thread->index] =\
-				texture->im.tab[(int)y_texture * texture->width + x_texture];
+		//	printf("y_texture = %lf\n", y_texture);
+		if (!(y.y < 0 || y.y >= thread->inputs->win_h))
+			thread->inputs->im.tab[y.y * thread->inputs->win_w + thread->index] =\
+			texture->im.tab[(int)y_texture * texture->width + x_texture];
 		y_texture += dy_texture;
 		y.y++;
 	}
@@ -39,6 +41,7 @@ void	print_text(t_dot y, t_texture *texture, double p, t_thread *thread)
 
 void print_sky(int max, t_thread *thread, t_input *inputs)
 {
+	//printf("strt print sky\n");
 	int i;
 
 	i = -1;
@@ -48,6 +51,7 @@ void print_sky(int max, t_thread *thread, t_input *inputs)
 
 void print_ground(int min, t_thread *thread, t_input *inputs)
 {
+//	printf("strt print groung\n");
 	int i;
 
 	i = min - 1;
