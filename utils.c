@@ -6,7 +6,7 @@
 /*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/17 18:27:08 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/24 18:16:52 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/25 16:34:29 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -28,12 +28,12 @@ int		init_var(t_input *inputs)
 	inputs->win_h = 1000;
 	inputs->vitesse = 0.1;
 	inputs->running = 0;
-	inputs->x_hitbox.x = -0.01;
-	inputs->x_hitbox.y = 0.01;
-	inputs->y_hitbox.x = -0.01;
-	inputs->y_hitbox.y = 0.01;
+	inputs->x_hitbox.x = -0.001;
+	inputs->x_hitbox.y = 0.001;
+	inputs->y_hitbox.x = -0.001;
+	inputs->y_hitbox.y = 0.001;
 	inputs->m3pi_2 = M_PI_2 * 3;
-	inputs->intotherunmf = 0;
+	inputs->intotherun = 0;
 	inputs->wall_size = 300;
 	fill_texture_tab(inputs);
 	inputs->oldposplayer = inputs->posplayer;

@@ -6,7 +6,7 @@
 /*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/17 20:29:39 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/24 18:38:03 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/25 16:06:11 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,7 +33,11 @@ int		main(int argc, char **argv)
 {
 	t_input inputs;
 
-	(void)argc;
+	if (argc != 2)
+	{
+		ft_putendl("usage: maps/valid_map_file");
+		exit(EXIT_SUCCESS);
+	}
 	inputs.fd = open(argv[1], O_RDONLY);
 	inputs.fd2 = open(argv[1], O_RDONLY);
 	inputs.fd3 = open(argv[1], O_RDONLY);

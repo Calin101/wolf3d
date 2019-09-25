@@ -6,7 +6,7 @@
 /*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/07/09 16:10:44 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/24 18:33:15 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/25 14:59:21 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -73,6 +73,6 @@ void	fill_texture_tab(t_input *data)
 {
 	data->name_text[0] = "texture/insidecube.xpm";
 	data->name_text[1] = "texture/minimal.xpm";
-	data->name_text[2] = "texture/yolodsada.xpm";
+	data->name_text[2] = "texture/yolo.xpm";
 	data->name_text[3] = "texture/rosace.xpm";
 }

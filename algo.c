@@ -6,7 +6,7 @@
 /*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/10 19:27:54 by mwaterso     #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/24 18:23:14 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/25 16:29:17 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -22,7 +22,7 @@ int		colli(t_input *inputs, t_fdot dot, t_thread *thread)
 		dot.y += (thread->alpha < M_PI) ? -1 : 0;
 	if (dot.x < 0 || dot.y < 0 || dot.x > inputs->xmax || dot.y > inputs->ymax)
 		return (0);
-	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] > 0)
+	if (inputs->tab[((int)dot.y) * inputs->xmax + (int)dot.x] == 2)
 		return (1);
 	else
 		return (0);
@@ -53,9 +53,9 @@ int height, t_fdot closest)
 	{
 		height = (double)inputs->wall_size / (dist(inputs->posplayer,
 		closest) * cos(thread->inputs->dirplayer - thread->alpha));
-		thread->wallmin = inputs->win_h / 2 - height + inputs->intotherunmf *
+		thread->wallmin = inputs->win_h / 2 - height + inputs->intotherun *
 		((double)inputs->win_h / 1000);
-		thread->wallmax = inputs->win_h / 2 + height + inputs->intotherunmf *
+		thread->wallmax = inputs->win_h / 2 + height + inputs->intotherun *
 		((double)inputs->win_h / 1000);
 	}
 	else
@@ -75,9 +75,9 @@ void	printline(t_input *inputs, t_fdot closest, t_thread *thread)
 	if (closest.x == -1 && closest.y == -1)
 	{
 		height = 0;
-		thread->wallmin = (inputs->win_h / 2 - height) + inputs->intotherunmf *
+		thread->wallmin = (inputs->win_h / 2 - height) + inputs->intotherun *
 		((double)inputs->win_h / 1000);
-		thread->wallmax = (inputs->win_h / 2 + height) + inputs->intotherunmf *
+		thread->wallmax = (inputs->win_h / 2 + height) + inputs->intotherun *
 		((double)inputs->win_h / 1000);
 	}
 	else

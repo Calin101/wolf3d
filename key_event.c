@@ -6,7 +6,7 @@
 /*   By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/09/24 17:23:16 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2019/09/24 18:25:02 by calin       ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/25 17:01:49 by calin       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,17 +18,19 @@ void	check_colli(int key, t_input *inputs)
 	if (key == KEY_LEFT || key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN)
 	{
 		if (inputs->tab[(int)(inputs->posplayer.x + inputs->x_hitbox.x) +
-		(int)inputs->posplayer.y * inputs->xmax] > 0 ||
-		inputs->tab[(int)inputs->posplayer.y + ((int)(inputs->posplayer.y +
-		inputs->y_hitbox.y)) * inputs->xmax] > 0 ||
+		(int)inputs->posplayer.y * inputs->xmax] == 2 ||
 		inputs->tab[(int)inputs->posplayer.x + ((int)(inputs->posplayer.y +
-		inputs->y_hitbox.x)) * inputs->xmax] > 0 ||
-		inputs->tab[(int)(inputs->posplayer.y + inputs->x_hitbox.y) +
-		(int)inputs->posplayer.y * inputs->xmax] > 0)
+		inputs->y_hitbox.y)) * inputs->xmax] == 2 ||
+		inputs->tab[(int)inputs->posplayer.x + ((int)(inputs->posplayer.y +
+		inputs->y_hitbox.x)) * inputs->xmax] == 2 ||
+		inputs->tab[(int)(inputs->posplayer.x + inputs->x_hitbox.y) +
+		(int)inputs->posplayer.y * inputs->xmax] == 2)
 			inputs->posplayer = inputs->oldposplayer;
 		else
 			inputs->oldposplayer = inputs->posplayer;
 	}
+	else
+		inputs->intotherun = 0;
 }
 
 void	keyboard_move(int key, t_input *inputs)
@@ -63,11 +65,11 @@ void	keyboard_move(int key, t_input *inputs)
 void	rotate_left_right(int key, t_input *inputs)
 {
 	if (key == KEY_D)
-		inputs->dirplayer += 0.03 +
-		(inputs->dirplayer + 0.1 > 2 * M_PI ? -2 * M_PI : 0);
+		inputs->dirplayer += 0.06 +
+		(inputs->dirplayer + 0.06 > 2 * M_PI ? -2 * M_PI : 0);
 	if (key == KEY_A)
-		inputs->dirplayer += (-0.03 +
-		(inputs->dirplayer + 0.1 < 0.00001 ? 2 * M_PI : 0));
+		inputs->dirplayer += (-0.06 +
+		(inputs->dirplayer - 0.06 < 0.00001 ? 2 * M_PI : 0));
 }
 
 int		ft_keyboard(int key, t_input *inputs)
@@ -87,7 +89,7 @@ int		ft_keyboard(int key, t_input *inputs)
 		}
 	}
 	if (inputs->running)
-		inputs->intotherunmf = (inputs->intotherunmf == -1 ? 1 : -1);
+		inputs->intotherun = (inputs->intotherun == -1 ? 1 : -1);
 	rotate_left_right(key, inputs);
 	if (key == KEY_ESCAPE)
 		clearall(inputs);

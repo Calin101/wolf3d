@@ -6,10 +6,12 @@
 #    By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/10/05 11:07:00 by calin        #+#   ##    ##    #+#        #
-#    Updated: 2019/03/26 08:23:25 by calin       ###    #+. /#+    ###.fr      #
+#    Updated: 2019/09/25 16:00:08 by calin       ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
+
+.PHONY: all clean fclean re norme
 
 NAME = libft.a
 
@@ -88,6 +90,8 @@ SRC = 	ft_bzero.c \
 
 OBJ = $(SRC:.c=.o)
 
+INC = libft.h
+
 FLAG = -Wall -Wextra -Werror
 
 CC = gcc $(FLAG)
@@ -97,12 +101,11 @@ RM = /bin/rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@ar rc $(NAME) $(OBJ)
-	@ranlib $(NAME)
+	ar rcs $(NAME) $(OBJ)
 	@echo "Make libft.a :\033[0;32m DONE !\033[0m"
 
-%.o: %.c
-	@$(CC) -o $@ -c $< -I ./
+%.o: %.c $(INC)
+	$(CC) -c $< -o $@
 
 clean:
 	@$(RM) $(OBJ)
@@ -116,4 +119,3 @@ norme:
 
 re: fclean all
 
-.PHONY: all clean fclean re norme

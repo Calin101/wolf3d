@@ -6,10 +6,12 @@
 #    By: calin <calin@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/06/25 16:00:03 by calin        #+#   ##    ##    #+#        #
-#    Updated: 2019/09/24 18:27:30 by calin       ###    #+. /#+    ###.fr      #
+#    Updated: 2019/09/25 16:03:02 by calin       ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
+
+.PHONY: all clean fclean re libftcompil
 
 NAME = wolf3d
 
@@ -34,15 +36,15 @@ LIBMLX = minilibx_macos/libmlx.a
 
 OPENGL = -framework OpenGL -framework AppKit
 
-all: $(NAME)
+all: lib $(NAME)
 
-$(NAME): $(LIBMLX) $(LIBFT) $(OBJ)
-		gcc $(FLAGS) $^ $(OPENGL) -o $@ -g
+$(NAME): $(LIBMLX) $(OBJ)
+		gcc $(FLAGS) $(LIBMLX) $(OBJ) $(OPENGL) -o $(NAME) -g $(LIBFT)
 
 %.o: %.c $(INC)
 		gcc $(FLAGS) -c $< -o $@
 
-$(LIBFT):
+lib:
 		make -C libft/
 
 $(LIBMLX):
@@ -59,5 +61,3 @@ fclean: clean
 
 re: fclean all
 		make re -C minilibx_macos/
-
-.PHONY: all clean fclean re
